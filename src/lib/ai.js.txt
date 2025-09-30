@@ -1,0 +1,35 @@
+// Integração real com OpenRouter usando endpoint público (gratuito)
+export async function aprimorarPrompt(prompt, tipo = "aprimorar") {
+  const MODEL = "openrouter/openai/gpt-3.5-turbo";
+  const endpoint = "https://openrouter.ai/api/v1/chat/completions";
+  const key = ""; // vazio para usar cota pública
+
+  let systemPrompt = "";
+  if (tipo === "aprimorar") {
+    systemPrompt = "Melhore o prompt abaixo para IA de geração de vídeo, tornando-o mais detalhado, técnico e em inglês, explicando cena, luz, ângulo, clima e estilo visual:";
+  } else if (tipo === "traduzir") {
+    systemPrompt = "Traduza o prompt abaixo para o inglês, mantendo todos os detalhes técnicos para IA de vídeo:";
+  }
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(key && { "Authorization": `Bearer ${key}` })
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: prompt }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || "Erro: resposta inesperada da IA";
+  } catch (e) {
+    return "Erro ao conectar com o serviço de IA gratuita.";
+  }
+}

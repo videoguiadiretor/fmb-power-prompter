@@ -1,0 +1,55 @@
+import { useState } from "react";
+import { aprimorarPrompt } from "../lib/ai";
+
+export default function Home() {
+  const [prompt, setPrompt] = useState("");
+  const [output, setOutput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleAprimorar(tipo = "aprimorar") {
+    setLoading(true);
+    const resposta = await aprimorarPrompt(prompt, tipo);
+    setOutput(resposta);
+    setLoading(false);
+  }
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-dark via-secondary to-blue-neon p-4">
+      <div className="w-full max-w-lg bg-[#181e29] p-8 rounded-xl shadow-2xl flex flex-col gap-6">
+        <h1 className="text-3xl font-futuristic text-blue-neon font-bold text-center mb-2">FMB Power Prompter</h1>
+        <p className="text-center text-gray-300 mb-4">
+          Gere, traduza e aprimore prompts para IA de vídeo de forma fácil e rápida.
+        </p>
+        <textarea
+          className="w-full rounded-lg p-3 text-dark border-2 border-blue-neon focus:ring focus:ring-blue-neon focus:outline-none"
+          rows={5}
+          placeholder="Digite seu prompt inicial (em português ou inglês)..."
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+        />
+        <div className="flex gap-2">
+          <button
+            className="flex-1 bg-blue-neon text-dark font-bold py-2 rounded-lg hover:bg-secondary transition"
+            onClick={() => handleAprimorar("aprimorar")}
+            disabled={loading || !prompt}
+          >
+            {loading ? "Aprimorando..." : "Aprimorar Prompt"}
+          </button>
+          <button
+            className="flex-1 bg-secondary text-white font-bold py-2 rounded-lg hover:bg-blue-neon transition"
+            onClick={() => handleAprimorar("traduzir")}
+            disabled={loading || !prompt}
+          >
+            {loading ? "Traduzindo..." : "Traduzir Prompt"}
+          </button>
+        </div>
+        <div className="mt-4 min-h-[60px] bg-dark rounded-lg p-3 text-blue-neon font-mono">
+          {output}
+        </div>
+        <div className="text-xs text-gray-500 text-center mt-2">
+          v1.0 • Layout responsivo • Para dúvidas: videoguiadiretor@gmail.com
+        </div>
+      </div>
+    </main>
+  );
+}

@@ -1,0 +1,18 @@
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        primary: "#2dd4fc",
+        secondary: "#a21caf",
+        dark: "#0a0d12",
+        "blue-neon": "#2dd4fc",
+        "pink-neon": "#a21caf"
+      },
+      fontFamily: {
+        futuristic: ["Orbitron", "sans-serif"]
+      }
+    }
+  },
+  plugins: []
+};
